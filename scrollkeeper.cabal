@@ -1,0 +1,18 @@
+Name: scrollkeeper
+Version: 0.0.1
+Synopsis: Aggregate and transform time tracker data
+Homepage: http://memorici.de
+License: MIT
+Author: Jonn Mostovoy
+Copyright: 2015 ILDesign
+Build-type: Simple
+Cabal-version: >=1.10
+Executable scrollkeeper
+  Ghc-options: -Wall
+  Main-is: Main.hs
+  Build-depends: base,
+                 text,
+                 time,
+                 configurator
+  Hs-source-dirs: src
+  Default-language: Haskell2010

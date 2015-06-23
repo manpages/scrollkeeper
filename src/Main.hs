@@ -2,6 +2,7 @@
 
 module Main (main) where
 
+import           Control.Category    ((>>>))
 import           Data.Text           (Text, pack, unwords)
 import           Data.Text.IO        (hGetLine, putStrLn)
 import           Data.Time.LocalTime (LocalTime (..))
@@ -22,18 +23,21 @@ lineHandler h f = do
       e <- hIsEOF   h1
       lineHandlerDo e h1 f1 (f1 x : a)
 
-processWorld :: World -> Parsed
+processWorld :: World -> [Entry]
 processWorld = (<$>) f
   where
-    f :: (LocalTime, Words) -> (Entry, Text)
-    f (tau, (v : ws)) = (g tau v (fromContinuous v), unwords ws)
-    f (tau, err)      = (EmptyEntry tau,             unwords err)
-    g :: LocalTime -> Text -> Maybe Text -> Entry
-    g t _ (Just x)    = VerbEntry (t, Verb x)
-    g t v _           = FactEntry (t, Fact v)
+    f :: (LocalTime, Words) -> Entry
+    f (tau, (v : ws)) = g (tau, (v:ws)) (fromContinuous v)
+    f (tau, _)        = EmptyEntry tau
+    g :: (LocalTime, Words) -> Maybe Text -> Entry
+    g (t, (_:ws)) (Just x)    = VerbEntry (t, [Verb (x, ws)])
+    g (t,  ws)    _           = FactEntry (t, [Fact (unwords ws)])
+
+ppShow' :: Show a => [a] -> String
+ppShow' x = concat (map show >>> map ("\n"++) $ x)
 
 main :: IO ()
 main = do
   h  <- openFile "real.data" ReadMode
   xs <- lineHandler h id
-  putStrLn $ pack $ show $ processWorld $ mkWorld xs
+  putStrLn $ pack $ ppShow' $ processWorld $ mkWorld xs

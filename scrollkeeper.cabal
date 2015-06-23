@@ -13,6 +13,8 @@ Executable scrollkeeper
   Build-depends: base,
                  text,
                  time,
-                 configurator
+                 configurator,
+                 pretty,
+                 pretty-show
   Hs-source-dirs: src
   Default-language: Haskell2010

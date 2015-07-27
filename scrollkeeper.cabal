@@ -11,11 +11,12 @@ Executable scrollkeeper
   Ghc-options: -Wall
   Main-is: Main.hs
   Build-depends: base,
+                 containers,
+                 configurator,
                  text,
                  time,
-                 configurator,
                  pretty,
                  pretty-show,
-                 parsec
-  Hs-source-dirs: src
+                 parsec,
+                 lens
   Default-language: Haskell2010
